@@ -54,7 +54,7 @@ class SessionManager(UserDict):
         module = "%s.transport.%s" % (Transport.__module__, transport)
         __import__(module)
 
-        self.transport = getattr(sys.modules[module], subclass)(options)
+        self.transport = getattr(sys.modules[module], subclass)(self.options)
         self.read()
 
     def __setitem__(self, key, item):

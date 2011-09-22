@@ -25,7 +25,7 @@ except ImportError:
 
 kwargs = {}
 
-version = "0.1"
+version = "0.3.4"
 
 major, minor = sys.version_info[:2]
 if major >= 3:
@@ -35,7 +35,7 @@ if major >= 3:
 distutils.core.setup(
     name="session",
     version=version,
-    packages = ["session"],
+    packages = ["session", "session.transport", "session.tornado"],
     package_data = {
         "session": [],
         },
