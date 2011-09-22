@@ -14,13 +14,18 @@ class Redis(Transport):
         if not options['token']:
             options['token'] = self.genid()
 
-        key = "{0}{1}".format(self.namespace, re.sub('[^a-z0-9]+', '', options['token'][:32]))
-        Transport.__init__(self, key)
+        token = re.sub('[^a-z0-9]+', '', options['token'][:32])
+
+        Transport.__init__(self, token)
 
         self.options = options
 
+    def prepare_key(self, key=None):
+        if not key: key = self.key
+        return  "{0}{1}".format(self.namespace, key)
+
     def key_exists(self, key):
-        response = self.redis.exists("{0}{1}".format(self.namespace, key))
+        response = self.redis.exists(self.prepare_key(key))
 
         if response: return True
 
@@ -28,7 +33,7 @@ class Redis(Transport):
 
     def read(self):
 
-        response = self.redis.get(self.key)
+        response = self.redis.get(self.prepare_key())
 
         if not response: return None
 
@@ -40,4 +45,4 @@ class Redis(Transport):
         if isinstance(value, dict):
             value = tornado.escape.json_encode(value)
 
-        self.redis.setex(self.key, value, self.options['expire'])
+        self.redis.setex(self.prepare_key(), value, self.options['expire'])
