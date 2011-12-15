@@ -7,12 +7,20 @@ class Handler(tornado.web.RequestHandler):
         return self.application.redis
 
     def finish(self, chunk=None):
-        super(Handler, self).finish(chunk)
         if hasattr(self, 'session') and self.session:
             self.session.write()
 
+            if 'use_cookies' in self.application.settings and self.application.settings['use_cookies'] and self.session.is_fresh():
+                self.set_cookie('token', self.session.token())
+
+        super(Handler, self).finish(chunk)
+
+
     def prepare(self):
         token = self.get_argument('token', None)
+
+        if 'use_cookies' in self.application.settings and self.application.settings['use_cookies']:
+            token = self.get_cookie('token')
 
         try:
             self.session = session.SessionManager({'token' : token, 'redis' : self.redis})

@@ -61,6 +61,9 @@ class SessionManager(UserDict):
         self.modified = True
         UserDict.__setitem__(self, key, item)
 
+    def token(self):
+        return self.transport.key
+
     def read(self):
         data = self.transport.read()
 
@@ -78,6 +81,8 @@ class SessionManager(UserDict):
             for (k, v) in data.items():
                 self[k] = v
 
+    def is_fresh(self):
+        return self.modified and not self.exists
 
     def write(self):
         if self.modified:

@@ -16,7 +16,3 @@ To install:
     python setup.py build
     sudo python setup.py install
 
-TODO
-=======
- * Cookie support
-
