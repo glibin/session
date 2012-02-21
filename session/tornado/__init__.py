@@ -23,7 +23,11 @@ class Handler(tornado.web.RequestHandler):
             token = self.get_cookie('token')
 
         try:
-            self.session = session.SessionManager({'token' : token, 'redis' : self.redis})
+            self.session = session.SessionManager({
+                'token' : token,
+                'redis' : self.redis,
+                'namespace' : self.application.settings['namespace'] if 'namespace' in self.application.settings else ''
+            })
         except session.TransportError:
             raise tornado.web.HTTPError(500)
         except session.SessionSecurityError:
