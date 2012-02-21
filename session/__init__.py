@@ -21,6 +21,9 @@ class Transport():
     def write(self, value):
         pass
 
+    def remove(self, key):
+        pass
+
     def key_exists(self, id):
         return False
 
@@ -63,6 +66,9 @@ class SessionManager(UserDict):
 
     def token(self):
         return self.transport.key
+
+    def remove(self, key = None):
+        self.transport.key_remove(key if key is not None else self.token())
 
     def read(self):
         data = self.transport.read()

@@ -31,6 +31,9 @@ class Redis(Transport):
 
         return False
 
+    def key_remove(self, key):
+        self.redis.delete(self.prepare_key(key))
+
     def read(self):
 
         response = self.redis.get(self.prepare_key())
