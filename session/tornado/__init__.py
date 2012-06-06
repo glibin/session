@@ -14,7 +14,8 @@ class Handler(tornado.web.RequestHandler):
                 self.set_cookie(
                     'token',
                     self.session.token(),
-                    domain = self.application.settings['cookie_domain'] if 'cookie_domain' in self.application.settings else None
+                    domain = self.application.settings['cookie_domain'] if 'cookie_domain' in self.application.settings else None,
+                    expires_days = int(self.session.options['expire'] / 86400)
                 )
 
         super(Handler, self).finish(chunk)
