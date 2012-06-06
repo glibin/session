@@ -11,7 +11,11 @@ class Handler(tornado.web.RequestHandler):
             self.session.write()
 
             if 'use_cookies' in self.application.settings and self.application.settings['use_cookies'] and self.session.is_fresh():
-                self.set_cookie('token', self.session.token())
+                self.set_cookie(
+                    'token',
+                    self.session.token(),
+                    domain = self.application.settings['cookie_domain'] if 'cookie_domain' in self.application.settings else None
+                )
 
         super(Handler, self).finish(chunk)
 
