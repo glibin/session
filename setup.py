@@ -25,7 +25,7 @@ except ImportError:
 
 kwargs = {}
 
-version = "0.3.12"
+version = "0.3.13"
 
 major, minor = sys.version_info[:2]
 if major >= 3:

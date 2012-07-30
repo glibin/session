@@ -11,7 +11,6 @@ class Handler(tornado.web.RequestHandler):
             self.session.write()
 
             if 'use_cookies' in self.application.settings and self.application.settings['use_cookies'] and self.session.is_fresh():
-                self.log.info('setting cookie')
                 self.set_cookie(
                     'token',
                     self.session.token(),
@@ -28,12 +27,13 @@ class Handler(tornado.web.RequestHandler):
         if 'use_cookies' in self.application.settings and self.application.settings['use_cookies']:
             token = self.get_cookie('token')
 
-        self.log.info(token)
         try:
             self.session = session.SessionManager({
                 'token' : token,
                 'redis' : self.redis,
-                'namespace' : self.application.settings['namespace'] if 'namespace' in self.application.settings else ''
+                'namespace' : self.application.settings['namespace'] if 'namespace' in self.application.settings else '',
+                'expire' : self.application.settings['expire'] if 'expire' in self.application.settings else 86400
+
             })
         except session.TransportError:
             raise tornado.web.HTTPError(500)
